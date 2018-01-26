@@ -1,0 +1,14 @@
+version: "2"
+services:
+    app:
+      container_name: app
+      command: npm run start
+      restart: always
+      build: .
+      privileged: true
+      tty: true
+      stdin_open: true
+      ports:
+        - "3000:3000"
+      volumes:
+        - ./src/:/usr/app/src
