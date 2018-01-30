@@ -3,12 +3,39 @@ const app = express();
 const path = require('path')
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt-nodejs');
+const mongoose = require('mongoose');
+
+app.use(bodyParser());
+
+app.use(express.static(path.join(__dirname, 'public')))
+
+//set up database
+mongoose.connect('mongodb://mongo:27017');
+
+const User=mongoose.model('User',{
+  username: String,
+  password: String,
+});
+
+app.post('/user',(req,res)=> {
+  const user = new User(req.body);
+  user.save().then(res.send(req.body));
+});
+
+app.get('/user',(req,res)=> {
+  User.find({}).then((results) => res.send(results));
+});
+
+app.get('/user/:username',(req,res)=> {
+  User.find({username:req.params.username}).then((results) => res.send(results));
+});
+/*
+const hello=mongoose.model('hello',{
+  username: String,
+  password: String,
+});
 
 
-app.use('/static', express.static(path.join(__dirname, 'public')))
-
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 
 
 app.get('/', function(req, res){
@@ -45,5 +72,6 @@ app.post('/meow', function(req, res){
 //     'password' : bcrypt.hashSync(req.body.password)
 //   ])
 // })
+*/
 
 app.listen(3000,() => console.log('app listening on port 3000'))

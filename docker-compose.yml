@@ -12,3 +12,9 @@ services:
         - "3000:3000"
       volumes:
         - ./src/:/usr/app/src
+      links:
+        - mongo
+    mongo:
+      image: mongo
+      ports:
+        - "27017:27017"
